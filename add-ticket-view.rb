@@ -5,9 +5,9 @@ class AddTicketView
         @title  = TextLineWidget.new(@screen, "",             11,  1, 30)
         @priort = DropdownWidget.new(@screen, "Zero",         11,  2, 30)
         @type   = DropdownWidget.new(@screen, "Unclassified", 11,  3, 30)
-        @desc   = TextFieldWidget.new(@screen, "",             0,  5, 30, 8)
-        @cancel = ButtonWidget.new(@screen,   "Cancel",        20, 10)
-        @submit = ButtonWidget.new(@screen,   "Submit",        0,  10)
+        @desc   = TextFieldWidget.new(@screen, "",             0,  5, 78, 14)
+        @cancel = ButtonWidget.new(@screen,   "Cancel",        20, 20)
+        @submit = ButtonWidget.new(@screen,   "Submit",        0,  20)
         @priort.options = %w{Zero Low Medium High Immediate}
         @type.options   = %w{Incident Code_Defect Build_Problem Documentation Feature_Request}
         @widgets = [@title, @priort, @type, @desc, @submit, @cancel]
@@ -79,7 +79,7 @@ class AddTicketView
                 else
                     if((c == "\n" || c == 13) && @submit == @widgets[@active_id])
                         `fossil ticket add title '#{@title.value}' priority '#{@priort.value}' type '#{@type.value}' icomment '#{@desc.value}' status Open`
-                        break
+                        return :do_refresh
                     elsif((c == "\n" || c == 13) && @cancel == @widgets[@active_id])
                         break
                     else

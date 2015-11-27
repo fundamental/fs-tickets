@@ -12,7 +12,7 @@ class TextFieldWidget
     end
 
     def handle(chr)
-        if(chr.class == String && chr.match(/[a-zA-Z .\n]/))
+        if(chr.class == String && chr.match(/[[:print:]\n]/))
             @value += chr
             true
         elsif(chr == Curses::KEY_ENTER || chr == 13)
@@ -29,7 +29,9 @@ class TextFieldWidget
     def draw
         value = @value
         if(value.empty?)
-           value = "_________________"
+            (0..@h).each do |x|
+                value += "_"*@w+"\n"
+            end
         end
 
         @screen.setpos(@y,@x)

@@ -11,7 +11,7 @@ class TextLineWidget
     end
 
     def handle(chr)
-        if(chr.class == String && chr.match(/[a-zA-Z .]/))
+        if(chr.class == String && chr.match(/[a-zA-Z\- .]/))
             @value += chr
             true
         elsif(chr == Curses::KEY_BACKSPACE || chr == 127)

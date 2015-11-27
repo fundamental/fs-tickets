@@ -12,11 +12,11 @@ require_relative "./add-ticket-view.rb"
 
 #Curses render
 class TableRender
-    def initialize(tickets)
-        @tickets   = tickets
+    def initialize(&block)
+        @tickets   = block.call
         @screen    = nil
         init_curses
-        view = ReportView.new(@screen, @tickets)
+        view = ReportView.new(@screen, @tickets, block)
         view.interact
     end
 

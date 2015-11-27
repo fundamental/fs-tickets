@@ -1,11 +1,18 @@
 class ReportView
-    def initialize(screen, tickets)
+    def initialize(screen, tickets, block)
         @screen       = screen
         @mode         = :all
         @real_tickets = tickets
         @tickets      = tickets
+        @refresh      = block
         @highlight    = 0
         display_lines
+    end
+
+    def refresh
+        @real_tickets = @refresh.call
+        toggle_open_tickets
+        toggle_open_tickets
     end
 
     def toggle_open_tickets
@@ -88,7 +95,10 @@ class ReportView
                 at = AddTicketView.new(@screen)
                 @screen.clear
                 at.display
-                at.interact
+                ret = at.interact
+                if(ret == :do_refresh)
+                    refresh
+                end
                 @screen.clear
                 display_lines
             when Curses::KEY_DOWN, Curses::KEY_CTRL_N, ?j
@@ -109,7 +119,7 @@ class ReportView
                 tv = TicketView.new(@screen, @tickets[@highlight])
                 @screen.clear
                 tv.display
-                tv.interact
+                ret = tv.interact
                 @screen.clear
                 display_lines
             when ?q
