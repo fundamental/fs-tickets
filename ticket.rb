@@ -32,12 +32,19 @@ class Ticket
         @comment_id ||= select("tkt_id")
     end
 
+    def old_comments
+        res   = select("comment")
+        res ||= ""
+    end
+
+
     def comments
+        old = old_comments
         res = @db.execute("select icomment from ticketchng where tkt_id is ?", comment_id)
         if(res)
-            res.join
+            old+res.join
         else
-            ""
+            old+""
         end
     end
     
