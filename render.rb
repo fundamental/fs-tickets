@@ -1,5 +1,14 @@
+#Widgets
+require_relative "./text-line-widget.rb"
+require_relative "./text-field-widget.rb"
+require_relative "./dropdown-widget.rb"
+require_relative "./button-widget.rb"
+
+#Application Views
 require_relative "./report-view.rb"
 require_relative "./ticket-view.rb"
+require_relative "./add-ticket-view.rb"
+
 
 #Curses render
 class TableRender
@@ -18,9 +27,10 @@ class TableRender
         Curses.init_screen
         Curses.raw
         Curses.nonl
-        Curses.cbreak
+        #Curses.cbreak
         Curses.noecho
         Curses.curs_set(0)
+        Curses.ESCDELAY = 10
         Curses.start_color
         Curses.init_pair(1, Curses::COLOR_WHITE, Curses::COLOR_BLUE);
 

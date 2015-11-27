@@ -20,6 +20,7 @@ class ReportView
             @mode = :open
         else
             @tickets = @real_tickets
+            @mode = :all
         end
         display_lines
     end
@@ -29,7 +30,7 @@ class ReportView
 
         @screen.setpos(0,0)
         @screen.attron(Curses.color_pair(1));
-        @screen.addstr("Issue Overview - [t]oggle open issues [q]uit")
+        @screen.addstr("Issue Overview - [a]dd new issue, [t]oggle open issues, [q]uit")
         @screen.attroff(Curses.color_pair(1));
 
         start = 0
@@ -46,7 +47,9 @@ class ReportView
             @screen.setpos(idx+1, 0)
             @screen.addstr(line_id.to_s+".")
             @screen.setpos(idx+1, 4)
-            @screen.addstr("["+tick.status[0]+"]")
+            if(tick.status)
+                @screen.addstr("["+tick.status[0]+"]")
+            end
             @screen.setpos(idx+1, 9)
             if(@highlight == line_id)
                 @screen.attron Curses::A_BOLD
@@ -81,6 +84,13 @@ class ReportView
             case c
             when ?t
                 toggle_open_tickets
+            when ?a
+                at = AddTicketView.new(@screen)
+                @screen.clear
+                at.display
+                at.interact
+                @screen.clear
+                display_lines
             when Curses::KEY_DOWN, Curses::KEY_CTRL_N, ?j
                 result = scroll_down
             when Curses::KEY_UP, Curses::KEY_CTRL_P, ?k

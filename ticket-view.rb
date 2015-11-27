@@ -5,6 +5,7 @@ class TicketView
     end
 
     def display
+        @screen.clear
         @screen.setpos(0,0)
         @screen.attron(Curses.color_pair(1));
         @screen.addstr("Issue Details - [f]ix [q]uit")

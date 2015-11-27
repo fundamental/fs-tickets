@@ -33,7 +33,12 @@ class Ticket
     end
 
     def comments
-        @db.execute("select icomment from ticketchng where tkt_id is ?", comment_id).join
+        res = @db.execute("select icomment from ticketchng where tkt_id is ?", comment_id)
+        if(res)
+            res.join
+        else
+            ""
+        end
     end
     
     def priority
