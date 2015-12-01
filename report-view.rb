@@ -25,11 +25,39 @@ class ReportView
                 end
             end
             @mode = :open
-        else
+        elsif(@mode == :open || @mode == :search)
             @tickets = @real_tickets
             @mode = :all
         end
         display_lines
+    end
+
+    def run_search(term)
+        @tickets = []
+        @real_tickets.each do |t|
+            if(t.match term)
+                @tickets << t
+            end
+        end
+        @mode = :search
+        display_lines
+    end
+
+    def search
+        label = TextLineWidget.new(@screen, "search:       ", 0, @screen.maxy-1, 40)
+        line  = TextLineWidget.new(@screen, "", 10, @screen.maxy-1, 40)
+        label.draw
+        line.draw
+        while true
+            c = Curses.getch
+            if(c == "\n" || !line.handle(c))
+                run_search(line.value)
+                break
+            else
+                label.draw
+                line.draw
+            end
+        end
     end
 
     def display_lines
@@ -46,6 +74,10 @@ class ReportView
         if(@highlight >= ylimit)
             start = ylimit*(@highlight/ylimit).to_i
             upper = start + ylimit - 1
+        end
+
+        if(@tickets.empty?)
+            return
         end
 
         @tickets[start..upper].each_with_index{|tick, idx|
@@ -122,6 +154,8 @@ class ReportView
                 ret = tv.interact
                 @screen.clear
                 display_lines
+            when "/"
+                search
             when ?q
                 break
             else

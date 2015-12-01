@@ -2,8 +2,9 @@ class Ticket
     def initialize(database, id)
         @db = database
         @ticketid = id
-        @title = nil
-        @status = nil
+        @title    = nil
+        @status   = nil
+        @comments = nil
     end
 
     def select(field)
@@ -39,13 +40,16 @@ class Ticket
 
 
     def comments
-        old = old_comments
-        res = @db.execute("select icomment from ticketchng where tkt_id is ?", comment_id)
-        if(res)
-            old+res.join
-        else
-            old+""
+        if(!@comments)
+            old = old_comments
+            res = @db.execute("select icomment from ticketchng where tkt_id is ?", comment_id)
+            if(res)
+                @comments = old+res.join
+            else
+                @comments = old+""
+            end
         end
+        @comments
     end
     
     def priority
@@ -58,6 +62,10 @@ class Ticket
             `fossil ticket set #{@ticketid} status Fixed`
             @status = nil
         end
+    end
+
+    def match(regex)
+        (comments && comments.match(regex)) || (title && title.match(regex))
     end
 end
 
