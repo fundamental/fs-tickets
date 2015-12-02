@@ -23,8 +23,10 @@ class TicketView
         @screen.setpos(4,0)
         @screen.addstr("Type:      #{@ticket.type}")
         @screen.setpos(5,0)
+        @screen.addstr("Subsystem: #{@ticket.subsystem}")
+        @screen.setpos(6,0)
         @screen.addstr("Comments:")
-        ln = 6
+        ln = 7
         @ticket.comments.split("\n").each do |l|
             @screen.setpos(ln,0)
             @screen.addstr(l)

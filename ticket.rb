@@ -28,6 +28,10 @@ class Ticket
     def type
         @type ||= select("type")
     end
+    
+    def subsystem
+        @subsystem ||= select("subsystem")
+    end
 
     def comment_id
         @comment_id ||= select("tkt_id")
