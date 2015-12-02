@@ -1,13 +1,13 @@
 #Widgets
-require_relative "./text-line-widget.rb"
-require_relative "./text-field-widget.rb"
-require_relative "./dropdown-widget.rb"
-require_relative "./button-widget.rb"
+require_relative "widget/text-line-widget.rb"
+require_relative "widget/text-field-widget.rb"
+require_relative "widget/dropdown-widget.rb"
+require_relative "widget/button-widget.rb"
 
 #Application Views
-require_relative "./report-view.rb"
-require_relative "./ticket-view.rb"
-require_relative "./add-ticket-view.rb"
+require_relative "view/report-view.rb"
+require_relative "view/ticket-view.rb"
+require_relative "view/add-ticket-view.rb"
 
 
 #Curses render
