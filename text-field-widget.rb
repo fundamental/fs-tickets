@@ -1,6 +1,6 @@
 class TextFieldWidget
     attr_accessor :active
-    attr_reader   :value
+    attr_accessor :value
     def initialize(screen, value, x, y, w, h)
         @active = false
         @screen = screen

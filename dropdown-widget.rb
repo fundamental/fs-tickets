@@ -11,9 +11,22 @@ class DropdownWidget
     end
 
     def options=(o)
-        #todo initialize current selection based upon o
         @options = o
+        fix_sel
+    end
 
+    def value=(v)
+        @value = v
+        fix_sel
+    end
+
+    #Fix the selection when either the value or options change
+    def fix_sel
+        @options.each_with_index do |o, idx|
+            if(@value == o)
+                @sel = idx
+            end
+        end
     end
 
     def initialize(screen, value, x, y, w)

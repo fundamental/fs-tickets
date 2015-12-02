@@ -1,3 +1,5 @@
+require 'yaml'
+
 class TicketView
     def initialize(screen, ticket)
         @screen = screen
@@ -42,11 +44,35 @@ class TicketView
             when ?f
                 @ticket.resolve
                 display
+            when ?e
+                edit
+                display
             else
                 @screen.setpos(0,0)
                 @screen.addstr("[unknown key `#{Curses.keyname(c)}'=#{c}] ")
             end
             @screen.setpos(0,0)
         end
+    end
+
+    def edit
+        tmp = File.open("fs-ticket-edit.txt", "w+")
+        tmp.puts({"title"    => @ticket.title,
+                  "status"   => @ticket.status,
+                  "priority" => @ticket.priority,
+                  "type"     => @ticket.type,
+                  "comment"  => @ticket.comments}.to_yaml)
+        tmp.close
+
+        system("vim fs-ticket-edit.txt")
+
+        #Restore curses options
+        Curses.raw
+        Curses.nonl
+        #Curses.cbreak
+        Curses.noecho
+        Curses.curs_set(0)
+        @screen.scrollok(true)
+        @screen.keypad(true)
     end
 end

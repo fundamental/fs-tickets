@@ -33,7 +33,8 @@ class ReportView
     end
 
     def run_search(term)
-        @tickets = []
+        @highlight = 0
+        @tickets   = []
         @real_tickets.each do |t|
             if(t.match term)
                 @tickets << t

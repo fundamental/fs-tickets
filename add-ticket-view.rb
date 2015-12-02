@@ -64,6 +64,9 @@ class AddTicketView
             when ?\t, 9
                 changeActive (@active_id + 1) % @widgets.length
                 display
+            when ?e
+                edit
+                display
             else
                 if(!@widgets[@active_id].handle(c))
                     if(c == Curses::KEY_UP)
@@ -88,6 +91,39 @@ class AddTicketView
                 end
             end
             @screen.setpos(0,0)
+        end
+    end
+    
+    def edit
+        tmp = File.open("fs-ticket-edit.yaml", "w+")
+        tmp.puts({"title"        => @title.value,
+                  "priority"     => @priort.value,
+                  "type"         => @type.value,
+                  "description"  => @desc.value}.to_yaml)
+        tmp.close
+
+        system("vim fs-ticket-edit.yaml")
+
+        #Restore curses options
+        Curses.raw
+        Curses.nonl
+        #Curses.cbreak
+        Curses.noecho
+        Curses.curs_set(0)
+        @screen.scrollok(true)
+        @screen.keypad(true)
+
+        begin
+            tmp = File.open("fs-ticket-edit.yaml", "r")
+            yy = YAML.load(tmp.read)
+            tmp.close
+            @title.value  = yy["title"]
+            @priort.value = yy["priority"]
+            @type.value   = yy["type"]
+            @desc.value   = yy["description"]
+
+            #Later these editing errors should be handled correctly
+            #rescue Exception=>e
         end
     end
 end

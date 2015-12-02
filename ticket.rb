@@ -48,6 +48,7 @@ class Ticket
             else
                 @comments = old+""
             end
+            @comments.gsub!(/\r\n/, "\n")
         end
         @comments
     end

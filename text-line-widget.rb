@@ -1,6 +1,6 @@
 class TextLineWidget
     attr_accessor :active
-    attr_reader   :value
+    attr_accessor :value
     def initialize(screen, value, x, y, w)
         @active = false
         @screen = screen
