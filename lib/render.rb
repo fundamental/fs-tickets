@@ -8,6 +8,7 @@ require_relative "widget/button-widget.rb"
 require_relative "view/report-view.rb"
 require_relative "view/ticket-view.rb"
 require_relative "view/add-ticket-view.rb"
+require_relative "view/edit-ticket-view.rb"
 
 
 #Curses render

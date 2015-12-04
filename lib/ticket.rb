@@ -2,9 +2,7 @@ class Ticket
     def initialize(database, id)
         @db = database
         @ticketid = id
-        @title    = nil
-        @status   = nil
-        @comments = nil
+        refresh
     end
 
     def select(field)
@@ -60,6 +58,10 @@ class Ticket
     def priority
         @priority ||= select("priority")
     end
+    
+    def resolution
+        @resolution ||= select("resolution")
+    end
 
 
     def resolve
@@ -67,6 +69,20 @@ class Ticket
             `fossil ticket set #{@ticketid} status Fixed`
             @status = nil
         end
+    end
+
+    def id
+        @ticketid
+    end
+
+    def refresh
+        @title      = nil
+        @status     = nil
+        @type       = nil
+        @subsystem  = nil
+        @priority   = nil
+        @resolution = nil
+        @comments   = nil
     end
 
     def match(regex)

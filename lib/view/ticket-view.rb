@@ -35,6 +35,7 @@ class TicketView
     end
     
     def interact
+        ret = nil
         while true
             result = true
             c = Curses.getch
@@ -44,10 +45,26 @@ class TicketView
             when ?q
                 break
             when ?f
-                @ticket.resolve
+                et = EditTicketView.new(@screen, @ticket)
+                @screen.clear
+                if(et.status.value == "Open")
+                    et.status.value = "Fixed"
+                end
+                et.display
+                tmp = et.interact
+                ret ||= tmp
+                @screen.clear
                 display
             when ?e
-                edit
+                et = EditTicketView.new(@screen, @ticket)
+                @screen.clear
+                if(et.status == "Open")
+                    et.status = "Fixed"
+                end
+                et.display
+                tmp = et.interact
+                ret ||= tmp
+                @screen.clear
                 display
             else
                 @screen.setpos(0,0)
@@ -55,6 +72,7 @@ class TicketView
             end
             @screen.setpos(0,0)
         end
+        ret
     end
 
     def edit

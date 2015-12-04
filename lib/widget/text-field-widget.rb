@@ -27,7 +27,9 @@ class TextFieldWidget
     end
 
     def draw
+        @value ||= ""
         value = @value
+
         if(value.empty?)
             (0..@h).each do |x|
                 value += "_"*@w+"\n"

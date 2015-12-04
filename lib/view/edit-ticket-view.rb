@@ -1,25 +1,39 @@
-class AddTicketView
-    def initialize(screen)
+class EditTicketView
+    attr_accessor :status
+
+    def initialize(screen, ticket)
         @screen = screen
+        @ticket = ticket
         @props  = Hash.new
-        @title  = TextLineWidget.new(@screen, "",             11,  1, 30)
-        @priort = DropdownWidget.new(@screen, "Zero",         11,  2, 30)
-        @type   = DropdownWidget.new(@screen, "Unclassified", 11,  3, 30)
-        @desc   = TextFieldWidget.new(@screen, "",             0,  5, 78, 14)
+        @title  = TextLineWidget.new(@screen, @ticket.title,       11,  1, 30)
+        @priort = DropdownWidget.new(@screen, @ticket.priority,    11,  2, 30)
+        @type   = DropdownWidget.new(@screen, @ticket.type,        11,  3, 30)
+        @status = DropdownWidget.new(@screen, @ticket.status,      11,  4, 30)
+        @resolv = DropdownWidget.new(@screen, @ticket.resolution,  11,  5, 30)
+        @desc   = TextFieldWidget.new(@screen, "",                 0,   7, 78, 12)
         @cancel = ButtonWidget.new(@screen,   "Cancel",        20, 20)
         @submit = ButtonWidget.new(@screen,   "Submit",        0,  20)
         @priort.options = %w{Zero Low Medium High Immediate}
         @type.options   = %w{Incident Code_Defect Build_Problem Documentation Feature_Request}
-        @widgets = [@title, @priort, @type, @desc, @submit, @cancel]
+        @status.options = %w{Open Verified Review Deferred Fixed Tested Closed}
+        @resolv.options= %w{Open Fixed Rejected Workaround Unable_To_Reproduce Works_As_Designed External_Bug Not_A_Bug Duplicate Overcome_By_Events Drive_By_Patch Misconfiguration}
+
+        @widgets = [@title, @priort, @type, @status, @resolv, @desc, @submit, @cancel]
         @title.active = true
         @active_id    = 0
+
+        @title.value  = @ticket.title
+        @priort.value = @ticket.priority
+        @type.value   = @ticket.type
+        @status.value = @ticket.status
+        @resolv.value = @ticket.resolution
     end
 
     def display
         @screen.clear
         @screen.setpos(0,0)
         @screen.attron(Curses.color_pair(1));
-        @screen.addstr("Issue Creation")
+        @screen.addstr("Issue Edit Window")
         @screen.attroff(Curses.color_pair(1));
 
 
@@ -30,9 +44,13 @@ class AddTicketView
         @screen.setpos(3,0)
         @screen.addstr("Type:")
         @screen.setpos(4,0)
-        @screen.addstr("Description:")
+        @screen.addstr("Status:")
+        @screen.setpos(5,0)
+        @screen.addstr("Resolution:")
+        @screen.setpos(6,0)
+        @screen.addstr("Comment:")
 
-        ln = 6
+        ln = 7
         @widgets.each_with_index do |w, idx|
             if(idx != @active_id)
                 w.draw
@@ -81,7 +99,11 @@ class AddTicketView
                     end
                 else
                     if((c == "\n" || c == 13) && @submit == @widgets[@active_id])
-                        `fossil ticket add title '#{@title.value}' priority '#{@priort.value}' type '#{@type.value}' icomment '#{@desc.value}' status Open`
+                        `fossil ticket set #{@ticket.id} title '#{@title.value}' priority '#{@priort.value}' type '#{@type.value}' status '#{@status.value}' resolution '#{@resolv.value}'`
+                        if(!@desc.value.empty?)
+                            `fossil ticket set #{@ticket.id} icomment '#{@desc.value}'`
+                        end
+                        @ticket.refresh
                         return :do_refresh
                     elsif((c == "\n" || c == 13) && @cancel == @widgets[@active_id])
                         break
@@ -99,7 +121,9 @@ class AddTicketView
         tmp.puts({"title"        => @title.value,
                   "priority"     => @priort.value,
                   "type"         => @type.value,
-                  "description"  => @desc.value}.to_yaml)
+                  "status"       => @status.value,
+                  "resolution"   => @resolv.value,
+                  "comment"      => @desc.value}.to_yaml)
         tmp.close
 
         system("vim fs-ticket-edit.yaml")
@@ -120,6 +144,8 @@ class AddTicketView
             @title.value  = yy["title"]
             @priort.value = yy["priority"]
             @type.value   = yy["type"]
+            @status.value = yy["status"]
+            @resolv.value = yy["resolution"]
             @desc.value   = yy["description"]
 
             #Later these editing errors should be handled correctly
