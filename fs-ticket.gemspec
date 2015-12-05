@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
     s.name          = 'fs-ticket'
-    s.version       = '0.0.0'
-    s.date          = '2015-12-02'
+    s.version       = '0.0.1'
+    s.date          = '2015-12-05'
     s.summary       = 'Ncurses interface to tickets stored in a fossil-scm repo'
     s.description   = <<-END
 fs-ticket is a command line interface to issues/tickets stored in a fossil
