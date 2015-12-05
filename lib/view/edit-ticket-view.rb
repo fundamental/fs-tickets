@@ -33,7 +33,7 @@ class EditTicketView
         @screen.clear
         @screen.setpos(0,0)
         @screen.attron(Curses.color_pair(1));
-        @screen.addstr("Issue Edit Window")
+        @screen.addstr("Issue Edit Window - [e]dit (in vim)")
         @screen.attroff(Curses.color_pair(1));
 
 

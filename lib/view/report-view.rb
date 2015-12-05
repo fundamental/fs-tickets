@@ -66,7 +66,7 @@ class ReportView
 
         @screen.setpos(0,0)
         @screen.attron(Curses.color_pair(1));
-        @screen.addstr("Issue Overview - [a]dd new issue, [t]oggle open issues, [q]uit")
+        @screen.addstr("Issue Overview - [a]dd new issue, [t]oggle open issues, [q]uit, [/]search")
         @screen.attroff(Curses.color_pair(1));
 
         start = 0

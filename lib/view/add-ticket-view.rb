@@ -19,7 +19,7 @@ class AddTicketView
         @screen.clear
         @screen.setpos(0,0)
         @screen.attron(Curses.color_pair(1));
-        @screen.addstr("Issue Creation")
+        @screen.addstr("Issue Creation - [e]dit (with vim)")
         @screen.attroff(Curses.color_pair(1));
 
 

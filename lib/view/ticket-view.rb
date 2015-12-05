@@ -10,7 +10,7 @@ class TicketView
         @screen.clear
         @screen.setpos(0,0)
         @screen.attron(Curses.color_pair(1));
-        @screen.addstr("Issue Details - [f]ix [q]uit")
+        @screen.addstr("Issue Details - [f]ix, [e]dit, [q]uit")
         @screen.attroff(Curses.color_pair(1));
 
 
